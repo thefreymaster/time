@@ -1,0 +1,15 @@
+@property --myColor1 {
+  syntax: "<color>";
+  initial-value: #390000;
+  inherits: false;
+}
+
+@property --myColor2 {
+  syntax: "<color>";
+  initial-value: black;
+  inherits: false;
+}
+
+.background {
+  background: linear-gradient(var(--myColor1), var(--myColor2));
+}
