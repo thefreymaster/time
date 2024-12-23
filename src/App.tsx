@@ -1,6 +1,7 @@
 import { Box, Text, useTheme } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./App.css";
+import { useDeviceSize } from "./useDeviceSize";
 
 function generateClockTicks(width: number, height: number) {
   const perimeter = 2 * (width + height);
@@ -54,9 +55,9 @@ const Cell = ({
       height="10px"
       width="10px"
       borderRadius={100}
-      opacity={index <= second ? 1 : 0}
+      opacity={index <= second ? 1 : index / 1000}
       transition="opacity 500ms ease-in-out"
-      backgroundColor={"gray.600"}
+      backgroundColor={"gray.200"}
       margin="10"
     />
   );
@@ -64,6 +65,8 @@ const Cell = ({
 
 function App() {
   const theme = useTheme();
+  const { isMobile } = useDeviceSize();
+
   const rowsWidth = window.innerWidth;
   const rowsHeight = window.innerHeight;
 
@@ -88,6 +91,23 @@ function App() {
     return () => clearInterval(interval);
   }, [second]);
 
+  const getBackground = () => {
+    if (hour < 5) {
+      return `linear-gradient(black, ${theme.colors.gray["900"]})`;
+    }
+    if (hour > 5 && hour < 8) {
+      return `linear-gradient(${theme.colors.red["900"]}, #0f0303)`;
+    }
+    if (hour > 8 && hour < 16) {
+      return `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["900"]})`;
+    }
+    if (hour > 16 && hour < 18) {
+      return `linear-gradient(${theme.colors.blue["900"]}, #091423)`;
+    }
+
+    return `linear-gradient(black, ${theme.colors.gray["900"]})`;
+  };
+
   return (
     <Box
       width="100vw"
@@ -95,7 +115,7 @@ function App() {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      background={`linear-gradient(black, ${theme.colors.gray["900"]})`}
+      background={getBackground()}
       className="background"
     >
       {ticks.map(({ x, y }: { x: number; y: number }, i) => (
@@ -104,7 +124,7 @@ function App() {
       <Text
         fontFamily="Montserrat"
         fontWeight={100}
-        fontSize="20em"
+        fontSize={isMobile ? "4em" : "20em"}
         color="white"
         display="flex"
       >
