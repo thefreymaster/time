@@ -108,6 +108,8 @@ function App() {
     return `linear-gradient(black, ${theme.colors.gray["900"]})`;
   };
 
+  const ampm = hour >= 12 ? "PM" : "AM";
+
   return (
     <Box
       width="100vw"
@@ -128,14 +130,22 @@ function App() {
         color="white"
         display="flex"
       >
-        {hour}
+        {hour > 12 ? hour - 12 : hour}
         <Box
           transition="opacity 250ms ease-in-out"
           opacity={second % 2 ? 1 : 0}
         >
           :
         </Box>
-        {minute}
+        {minute < 10 ? `0${minute}` : minute}
+        <Box
+          color="gray.400"
+          fontWeight="medium"
+          position="absolute"
+          fontSize="8xl"
+        >
+          {ampm}
+        </Box>
       </Text>
     </Box>
   );

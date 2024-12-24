@@ -11,7 +11,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 const [html] = document.getElementsByTagName("html");
 
-html.style.backgroundColor = "#000";
+html.style.backgroundColor = "#fff";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
