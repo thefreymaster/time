@@ -57,7 +57,7 @@ const Cell = ({
       borderRadius={100}
       opacity={index <= second ? 1 : index / 1000}
       transition="opacity 500ms ease-in-out"
-      backgroundColor={"gray.200"}
+      backgroundColor={"gray.50"}
       margin="10"
     />
   );
@@ -139,7 +139,7 @@ function App() {
         </Box>
         {minute < 10 ? `0${minute}` : minute}
         <Box
-          color="gray.400"
+          color="gray.100"
           fontWeight="medium"
           position="absolute"
           fontSize="8xl"
