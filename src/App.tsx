@@ -3,51 +3,16 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { useDeviceSize } from "./useDeviceSize";
 
-function generateClockTicks(width: number, height: number) {
-  const perimeter = 2 * (width + height);
-  const segmentLength = perimeter / 60;
-  const positions = [];
-
-  for (let i = 0; i < 60; i++) {
-    const currentDistance = i * segmentLength;
-    let x, y;
-
-    if (currentDistance <= width) {
-      // Top edge
-      x = currentDistance;
-      y = 0;
-    } else if (currentDistance <= width + height) {
-      // Right edge
-      x = width;
-      y = currentDistance - width;
-    } else if (currentDistance <= 2 * width + height) {
-      // Bottom edge
-      x = width - (currentDistance - (width + height));
-      y = height;
-    } else {
-      // Left edge
-      x = 0;
-      y = height - (currentDistance - (2 * width + height));
-    }
-
-    positions.push({ x, y });
-  }
-
-  return positions;
-}
-
 const Cell = ({
   // x,
   // y,
   index,
   second,
-  length,
 }: {
   // x: number;
   // y: number;
   index: number;
   second: number;
-  length: number;
 }) => {
   return (
     <>
@@ -69,10 +34,6 @@ function App() {
   const theme = useTheme();
   const { isMobile, isPhone, isTablet } = useDeviceSize();
 
-  const rowsWidth = window.innerWidth;
-  const rowsHeight = window.innerHeight;
-
-  const ticks = generateClockTicks(rowsWidth - 100, rowsHeight - 110);
   const [second, setSecond] = useState(new Date().getSeconds());
   const [minute, setMinute] = useState(new Date().getMinutes());
   const [hour, setHour] = useState(new Date().getHours());
@@ -141,8 +102,9 @@ function App() {
         alignItems="center"
         justifyContent="space-between"
       >
+        {/* @ts-ignore */}
         {topBottom.map((cell, i) => (
-          <Cell length={topBottom.length} index={i} second={second} />
+          <Cell index={i} second={second} />
         ))}
       </Box>
 
@@ -165,12 +127,9 @@ function App() {
           padding={isMobile ? "30px 0px" : "50px 0px"}
         >
           {/*  50 - 59 */}
+          {/* @ts-ignore */}
           {leftRight.map((cell, i) => (
-            <Cell
-              length={leftRight.length}
-              index={leftRight.length + 50 - 1 - i}
-              second={second}
-            />
+            <Cell index={leftRight.length + 50 - 1 - i} second={second} />
           ))}
         </Box>
         <Box
@@ -225,12 +184,9 @@ function App() {
           padding={isMobile ? "30px 0px" : "50px 0px"}
         >
           {/* 20-29 */}
+          {/* @ts-ignore */}
           {leftRight.map((cell, i) => (
-            <Cell
-              length={leftRight.length + 20}
-              index={i + 20}
-              second={second}
-            />
+            <Cell index={i + 20} second={second} />
           ))}
         </Box>
       </Box>
@@ -242,12 +198,9 @@ function App() {
         justifyContent="space-between"
       >
         {/* 30 - 49 */}
+        {/* @ts-ignore */}
         {topBottom.map((cell, i) => (
-          <Cell
-            length={leftRight.length + 30}
-            index={topBottom.length + 30 - 1 - i}
-            second={second}
-          />
+          <Cell index={topBottom.length + 30 - 1 - i} second={second} />
         ))}
       </Box>
     </Box>
