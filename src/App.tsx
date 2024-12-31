@@ -37,35 +37,37 @@ function generateClockTicks(width: number, height: number) {
 }
 
 const Cell = ({
-  x,
-  y,
+  // x,
+  // y,
   index,
   second,
+  length,
 }: {
-  x: number;
-  y: number;
+  // x: number;
+  // y: number;
   index: number;
   second: number;
+  length: number;
 }) => {
   return (
-    <Box
-      position="absolute"
-      left={x}
-      top={y}
-      height="10px"
-      width="10px"
-      borderRadius={100}
-      opacity={index <= second ? 1 : index / 1000}
-      transition="opacity 500ms ease-in-out"
-      backgroundColor={"gray.50"}
-      margin="10"
-    />
+    <>
+      <Box
+        display="flex"
+        height="10px"
+        width="10px"
+        borderRadius={100}
+        opacity={index <= second ? 1 : index / 1000}
+        transition="opacity 500ms ease-in-out"
+        backgroundColor={"gray.50"}
+        data-test={index}
+      />
+    </>
   );
 };
 
 function App() {
   const theme = useTheme();
-  const { isMobile } = useDeviceSize();
+  const { isMobile, isPhone, isTablet } = useDeviceSize();
 
   const rowsWidth = window.innerWidth;
   const rowsHeight = window.innerHeight;
@@ -74,6 +76,12 @@ function App() {
   const [second, setSecond] = useState(new Date().getSeconds());
   const [minute, setMinute] = useState(new Date().getMinutes());
   const [hour, setHour] = useState(new Date().getHours());
+
+  const getFontSize = () => {
+    if (isPhone) return "8em";
+    if (isTablet) return "12em";
+    return "18em";
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -93,20 +101,23 @@ function App() {
 
   const getBackground = () => {
     if (hour < 5) {
-      return `linear-gradient(black, ${theme.colors.gray["900"]})`;
+      return `linear-gradient(${theme.colors.gray["900"]}, black)`;
     }
     if (hour > 5 && hour < 8) {
-      return `linear-gradient(${theme.colors.red["900"]}, #0f0303)`;
+      return `linear-gradient(#dd5e65, #a94b00)`;
     }
     if (hour > 8 && hour < 16) {
-      return `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["900"]})`;
+      return `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["700"]})`;
     }
     if (hour > 16 && hour < 18) {
-      return `linear-gradient(${theme.colors.blue["900"]}, #091423)`;
+      return `linear-gradient(rgb(9 23 43), rgb(3 8 14))`;
     }
 
     return `linear-gradient(black, ${theme.colors.gray["900"]})`;
   };
+
+  const topBottom = Array.from(Array(20));
+  const leftRight = Array.from(Array(10));
 
   const ampm = hour >= 12 ? "PM" : "AM";
 
@@ -119,34 +130,126 @@ function App() {
       justifyContent="center"
       background={getBackground()}
       className="background"
+      flexDir="column"
+      padding={isMobile ? "20px" : "40px"}
     >
-      {ticks.map(({ x, y }: { x: number; y: number }, i) => (
-        <Cell x={x} y={y} index={i} second={second} />
-      ))}
-      <Text
-        fontFamily="Montserrat"
-        fontWeight={100}
-        fontSize={isMobile ? "4em" : "20em"}
-        color="white"
+      {/* 0 - 19 */}
+      <Box
         display="flex"
+        minW="100%"
+        flexGrow="grow"
+        alignItems="center"
+        justifyContent="space-between"
       >
-        {hour > 12 ? hour - 12 : hour}
+        {topBottom.map((cell, i) => (
+          <Cell length={topBottom.length} index={i} second={second} />
+        ))}
+      </Box>
+
+      {/* ))} */}
+      <Box
+        height="calc(100vh)"
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDir="row"
+      >
         <Box
-          transition="opacity 250ms ease-in-out"
-          opacity={second % 2 ? 1 : 0}
+          display="flex"
+          minH="100%"
+          flexGrow="grow"
+          alignItems="center"
+          flexDir="column"
+          justifyContent="space-between"
+          padding={isMobile ? "30px 0px" : "50px 0px"}
         >
-          :
+          {/*  50 - 59 */}
+          {leftRight.map((cell, i) => (
+            <Cell
+              length={leftRight.length}
+              index={leftRight.length + 50 - 1 - i}
+              second={second}
+            />
+          ))}
         </Box>
-        {minute < 10 ? `0${minute}` : minute}
         <Box
-          color="gray.100"
-          fontWeight="medium"
-          position="absolute"
-          fontSize="8xl"
+          height="100%"
+          width="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          flexDir="column"
         >
-          {ampm}
+          <Text
+            lineHeight={1}
+            fontFamily="Lato"
+            fontWeight={100}
+            color="white"
+            display="flex"
+            flexDir="column"
+            fontSize={getFontSize()}
+          >
+            <Box display="flex" flexDir="row">
+              <Box>{hour > 12 ? hour - 12 : hour}</Box>
+              <Box
+                transition="opacity 250ms ease-in-out"
+                opacity={second % 2 ? 1 : 0}
+              >
+                :
+              </Box>
+              <Box>{minute < 10 ? `0${minute}` : minute}</Box>
+            </Box>
+          </Text>
+          <Text
+            fontFamily="Lato"
+            fontWeight={100}
+            color="white"
+            display="flex"
+            flexDir="column"
+            lineHeight={1}
+            fontSize={isMobile ? "5xl" : "6xl"}
+          >
+            <Box fontWeight={200} color="gray.100" fontFamily="Lato">
+              {ampm}
+            </Box>
+          </Text>
         </Box>
-      </Text>
+        <Box
+          display="flex"
+          minH="100%"
+          flexGrow="grow"
+          alignItems="center"
+          flexDir="column"
+          justifyContent="space-between"
+          padding={isMobile ? "30px 0px" : "50px 0px"}
+        >
+          {/* 20-29 */}
+          {leftRight.map((cell, i) => (
+            <Cell
+              length={leftRight.length + 20}
+              index={i + 20}
+              second={second}
+            />
+          ))}
+        </Box>
+      </Box>
+      <Box
+        display="flex"
+        minW="100%"
+        flexGrow="grow"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        {/* 30 - 49 */}
+        {topBottom.map((cell, i) => (
+          <Cell
+            length={leftRight.length + 30}
+            index={topBottom.length + 30 - 1 - i}
+            second={second}
+          />
+        ))}
+      </Box>
     </Box>
   );
 }
