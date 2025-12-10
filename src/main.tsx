@@ -6,6 +6,7 @@ import theme from "./theme.ts";
 
 // Import the functions you need from the SDKs you need
 import { ChakraProvider } from "@chakra-ui/react";
+import { FontFaces } from "./Fonts.tsx";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,6 +17,7 @@ html.style.backgroundColor = "#fff";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ChakraProvider theme={theme}>
+      <FontFaces />
       <App />
     </ChakraProvider>
   </StrictMode>

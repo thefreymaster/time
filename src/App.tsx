@@ -61,22 +61,52 @@ function App() {
     return () => clearInterval(interval);
   }, [second]);
 
-  const getBackground = () => {
-    if (hour < 5) {
-      return `linear-gradient(${theme.colors.gray["900"]}, black)`;
-    }
-    if (hour > 5 && hour < 8) {
-      return `linear-gradient(#dd5e65, #a94b00)`;
-    }
-    if (hour > 8 && hour < 16) {
-      return `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["700"]})`;
-    }
-    if (hour > 16 && hour < 18) {
-      return `linear-gradient(rgb(9 23 43), rgb(3 8 14))`;
-    }
+const gradientsByHour: Record<number, string> = {
+  // Late night
+  0: `linear-gradient(#0a0a0f, #000)`,
+  1: `linear-gradient(#0a0a10, #000)`,
+  2: `linear-gradient(#0a0a12, #000)`,
+  3: `linear-gradient(#0b0b14, #000)`,
+  4: `linear-gradient(#0c0c16, #000)`,
 
-    return `linear-gradient(black, ${theme.colors.gray["900"]})`;
-  };
+  // Early dawn (5–7)
+  5: `linear-gradient(#2c1a33, #140a16)`,
+  6: `linear-gradient(#80304d, #2c0f13)`,
+  7: `linear-gradient(#dd5e65, #a94b00)`,
+
+  // Morning (8–11)
+  8: `linear-gradient(${theme.colors.blue["100"]}, ${theme.colors.blue["300"]})`,
+  9: `linear-gradient(${theme.colors.blue["100"]}, ${theme.colors.blue["400"]})`,
+  10: `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["500"]})`,
+  11: `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["600"]})`,
+
+  // Afternoon (12–15)
+  12: `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["600"]})`,
+  13: `linear-gradient(${theme.colors.blue["200"]}, ${theme.colors.blue["700"]})`,
+  14: `linear-gradient(${theme.colors.blue["300"]}, ${theme.colors.blue["700"]})`,
+  15: `linear-gradient(${theme.colors.blue["300"]}, ${theme.colors.blue["800"]})`,
+
+  // Late afternoon → golden hour (16–17)
+  16: `linear-gradient(#f7b267, #1f3b5f)`,
+  17: `linear-gradient(#ff9e5e, #2b2d42)`,
+
+  // Sunset (18–19)
+  18: `linear-gradient(#dd5e65, #1b1b2f)`,
+  19: `linear-gradient(#a73737, #3c1053)`,
+
+  // Twilight (20–21)
+  20: `linear-gradient(#1a1a2e, #16213e)`,
+  21: `linear-gradient(#10101a, #0d0d12)`,
+
+  // Night (22–23)
+  22: `linear-gradient(#0a0a12, #000)`,
+  23: `linear-gradient(#0a0a10, #000)`,
+};
+
+const getBackground = (hour: number) => {
+  return gradientsByHour[hour] ?? gradientsByHour[0];
+};
+
 
   const topBottom = Array.from(Array(20));
   const leftRight = Array.from(Array(10));
@@ -90,7 +120,7 @@ function App() {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      background={getBackground()}
+      background={getBackground(hour)}
       className="background"
       flexDir="column"
       padding={isMobile ? "20px" : "40px"}
