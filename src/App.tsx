@@ -2,6 +2,7 @@ import { Box, Text, useTheme } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { useDeviceSize } from "./useDeviceSize";
+import NumberFlow from "@number-flow/react";
 
 const Cell = ({
   // x,
@@ -150,14 +151,15 @@ function App() {
             fontSize={getFontSize()}
           >
             <Box display="flex" flexDir="row">
-              <Box>{hour > 12 ? hour - 12 : hour}</Box>
+              <NumberFlow value={hour > 12 ? hour - 12 : hour} />
               <Box
                 transition="opacity 250ms ease-in-out"
                 opacity={second % 2 ? 1 : 0}
               >
                 :
               </Box>
-              <Box>{minute < 10 ? `0${minute}` : minute}</Box>
+              <NumberFlow prefix={minute < 10 ? `0` : ''} value={minute} />
+              {/* <Box>{minute < 10 ? `0${minute}` : minute}</Box> */}
             </Box>
           </Text>
           <Text
